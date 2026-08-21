@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CI/CD Deployment Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <div class="badge">Production Environment</div>
+            <h1>Deployment Status</h1>
+            <p class="subtitle">Real-time status of your AWS EC2 instance deployment pipeline</p>
+        </header>
+
+        <main class="grid">
+            <!-- Status Card -->
+            <section class="card status-card">
+                <div class="card-header">
+                    <div class="status-indicator active"></div>
+                    <h2>Web Server Active</h2>
+                </div>
+                <div class="stat-value">Nginx 1.24</div>
+                <p>The web server is running successfully on your Amazon Linux 2023 instance.</p>
+            </section>
+
+            <!-- Pipeline Card -->
+            <section class="card pipeline-card">
+                <div class="card-header">
+                    <span class="icon">⚙️</span>
+                    <h2>CI/CD Pipeline</h2>
+                </div>
+                <div class="stat-value">Jenkins Active</div>
+                <p>Automated deployment is configured via GitHub Webhook and a custom Jenkinsfile pipeline.</p>
+            </section>
+
+            <!-- Server Details -->
+            <section class="card details-card">
+                <h2>Instance Details</h2>
+                <ul class="details-list">
+                    <li><span>Instance ID</span> <strong>i-01761cb7f020219f3</strong></li>
+                    <li><span>Instance Type</span> <strong>t2.micro (Free Tier)</strong></li>
+                    <li><span>Public IP</span> <strong>34.230.44.126</strong></li>
+                    <li><span>Region</span> <strong>us-east-1 (N. Virginia)</strong></li>
+                </ul>
+            </section>
+        </main>
+
+        <section class="interactive-area card">
+            <h2>Test the Pipeline!</h2>
+            <p>Modify this file (`index.html`) or the CSS (`style.css`), commit, and push it to your GitHub repository. The webhook will trigger Jenkins, and the changes will deploy instantly here!</p>
+            <div class="action-box">
+                <code class="cmd">git commit -am "Updated design elements" && git push</code>
+            </div>
+        </section>
+
+        <footer>
+            <p>Powered by AWS • Jenkins • Nginx • GitHub</p>
+        </footer>
+    </div>
+</body>
+</html>
