@@ -1,0 +1,1 @@
+jenkins ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart java-app, /usr/bin/systemctl status java-app, /usr/bin/systemctl stop java-app, /usr/bin/systemctl start java-app

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Spring Boot Server Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: rgba(31, 40, 51, 0.45);
+            --border-color: rgba(102, 252, 241, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #c5c6c7;
+            --accent-cyan: #66fcf1;
+            --accent-blue: #45f3ff;
+            --accent-alert: #ff4757;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Orbs */
+        .background-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            opacity: 0.12;
+        }
+
+        .orb-cyan {
+            width: 450px;
+            height: 450px;
+            background: var(--accent-cyan);
+            top: -10%;
+            right: 10%;
+        }
+
+        .orb-blue {
+            width: 400px;
+            height: 400px;
+            background: #1f85de;
+            bottom: -10%;
+            left: 15%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(102, 252, 241, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--accent-cyan);
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.75rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        /* Dashboard Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(102, 252, 241, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Metric Gauge */
+        .metric {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .metric-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #1f85de, var(--accent-cyan));
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-bar.warning {
+            background: linear-gradient(90deg, #f9ca24, var(--accent-alert));
+        }
+
+        .big-stat {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .big-stat span {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        /* Specs list */
+        .specs-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .specs-list li {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .specs-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .specs-list span {
+            color: var(--text-secondary);
+        }
+
+        .specs-list strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+        
+        .footer-logo {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-glow">
+        <div class="glow-orb orb-cyan"></div>
+        <div class="glow-orb orb-blue"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="badge">Spring Boot JVM Application</div>
+            <h1>Java App Live Stats</h1>
+            <p class="subtitle">System resources and environment metrics fetched dynamically by Java</p>
+        </header>
+
+        <main class="grid">
+            <!-- CPU metrics -->
+            <section class="card">
+                <h2 class="card-title">🖥️ CPU Performance</h2>
+                <div class="big-stat" th:text="${cpuLoad} + ' %'">0.00 %</div>
+                <div class="metric">
+                    <div class="metric-label">
+                        <span>CPU Utilization</span>
+                        <span th:text="${cpuLoad} + '%'">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" th:style="'width: ' + ${cpuLoad} + '%'"></div>
+                    </div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Core Processors available: <strong th:text="${availableProcessors}" style="color: white;">1</strong>
+                </p>
+            </section>
+
+            <!-- Memory Metrics -->
+            <section class="card">
+                <h2 class="card-title">💾 RAM Utilization</h2>
+                <div class="big-stat">
+                    <span th:text="${usedMemory}">0</span><span style="font-size: 1.5rem; margin-right: 4px;">MB</span>
+                    <span th:text="'/ ' + ${totalMemory} + ' MB'">/ 0 MB</span>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">
+                        <span>Physical Memory Used</span>
+                        <span th:text="${(usedMemory * 100) / totalMemory} + '%'">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" th:style="'width: ' + ${(usedMemory * 100) / totalMemory} + '%'"></div>
+                    </div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Free space: <strong th:text="${freeMemory} + ' MB'" style="color: white;">0 MB</strong>
+                </p>
+            </section>
+
+            <!-- System Info -->
+            <section class="card">
+                <h2 class="card-title">⚙️ System Specifications</h2>
+                <ul class="specs-list">
+                    <li><span>OS Name</span> <strong th:text="${osName}">Linux</strong></li>
+                    <li><span>Architecture</span> <strong th:text="${osArch}">amd64</strong></li>
+                    <li><span>Java Version</span> <strong th:text="${javaVersion}">21</strong></li>
+                    <li><span>Server Engine</span> <strong>Embedded Tomcat</strong></li>
+                    <li><span>Status</span> <strong style="color: var(--accent-cyan);">ONLINE</strong></li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by <span class="footer-logo">Spring Boot</span> • Java 21 • Thymeleaf • Nginx • Jenkins</p>
+        </footer>
+    </div>
+</body>
+</html>

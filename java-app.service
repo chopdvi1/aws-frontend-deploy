@@ -1,0 +1,14 @@
+[Unit]
+Description=Java Spring Boot Web Application
+After=network.target
+
+[Service]
+User=jenkins
+WorkingDirectory=/var/lib/jenkins
+ExecStart=/usr/bin/java -Xmx256m -Xms128m -jar /var/lib/jenkins/java-app.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building Java Spring Boot application using Maven...'
+                // Run maven package on the java-app pom
+                sh 'mvn -f java-app/pom.xml clean package'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying Java Jar file...'
+                // Copy built jar to running directory
+                sh 'cp java-app/target/demo-0.0.1-SNAPSHOT.jar /var/lib/jenkins/java-app.jar'
+                
+                echo 'Restarting java-app service...'
+                // Restart systemd service
+                sh 'sudo systemctl restart java-app'
+                
+                echo 'Verifying service status...'
+                sh 'sudo systemctl status java-app'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Java App successfully built and deployed!'
+        }
+        failure {
+            echo 'Deployment failed. Check console logs.'
+        }
+    }
+}
