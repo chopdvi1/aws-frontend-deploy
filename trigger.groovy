@@ -1,5 +1,5 @@
 import jenkins.model.Jenkins
-def job = Jenkins.getInstance().getItemByFullName("frontend-deploy")
+def job = Jenkins.getInstance().getItemByFullName("java-app-deploy")
 if (job != null) {
     job.scheduleBuild2(0)
     println("Build triggered successfully from init script.")

@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=jenkins
 WorkingDirectory=/var/lib/jenkins
-ExecStart=/usr/bin/java -Xmx256m -Xms128m -jar /var/lib/jenkins/java-app.jar
+ExecStart=/usr/bin/java -Xmx256m -Xms128m -jar /var/lib/jenkins/java-app.war
 SuccessExitStatus=143
 Restart=always
 RestartSec=10

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -233,13 +234,14 @@
             font-size: 0.85rem;
             margin-top: 1rem;
         }
-        
+
         .footer-logo {
             color: var(--accent-cyan);
             font-weight: 600;
         }
     </style>
 </head>
+
 <body>
     <div class="background-glow">
         <div class="glow-orb orb-cyan"></div>
@@ -248,7 +250,7 @@
 
     <div class="container">
         <header>
-            <div class="badge">Spring Boot JVM Application</div>
+            <div class="badge">DEMO TEST CI/CD Application</div>
             <h1>Java App Live Stats</h1>
             <p class="subtitle">System resources and environment metrics fetched dynamically by Java</p>
         </header>
@@ -285,7 +287,8 @@
                         <span th:text="${(usedMemory * 100) / totalMemory} + '%'">0%</span>
                     </div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" th:style="'width: ' + ${(usedMemory * 100) / totalMemory} + '%'"></div>
+                        <div class="progress-bar" th:style="'width: ' + ${(usedMemory * 100) / totalMemory} + '%'">
+                        </div>
                     </div>
                 </div>
                 <p style="color: var(--text-secondary); font-size: 0.9rem;">
@@ -311,4 +314,5 @@
         </footer>
     </div>
 </body>
+
 </html>

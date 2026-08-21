@@ -15,9 +15,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying Java Jar file...'
-                // Copy built jar to running directory
-                sh 'cp java-app/target/demo-0.0.1-SNAPSHOT.jar /var/lib/jenkins/java-app.jar'
+                echo 'Deploying Java WAR file...'
+                // Copy built war to running directory
+                sh 'cp java-app/target/demo-0.0.1-SNAPSHOT.war /var/lib/jenkins/java-app.war'
                 
                 echo 'Restarting java-app service...'
                 // Restart systemd service
