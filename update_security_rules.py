@@ -57,9 +57,10 @@ def main():
     # Define rules to add
     ip_permissions = []
     
-    # Check if port 80 is already open to 0.0.0.0/0
+    # Check if ports are already open
     port_80_open = False
     port_8080_open = False
+    port_22_open = False
     
     for perm in response['SecurityGroups'][0].get('IpPermissions', []):
         from_port = perm.get('FromPort')
@@ -72,6 +73,10 @@ def main():
             for ip_range in perm.get('IpRanges', []):
                 if ip_range.get('CidrIp') == jenkins_cidr:
                     port_8080_open = True
+        if from_port == 22 and to_port == 22:
+            for ip_range in perm.get('IpRanges', []):
+                if ip_range.get('CidrIp') == jenkins_cidr:
+                    port_22_open = True
 
     if not port_80_open:
         print(f"Adding rule: Allow HTTP (Port 80) from 0.0.0.0/0")
@@ -94,6 +99,17 @@ def main():
         })
     else:
         print(f"Jenkins Port 8080 is already authorized for {jenkins_cidr}.")
+
+    if not port_22_open:
+        print(f"Adding rule: Allow SSH (Port 22) from {jenkins_cidr}")
+        ip_permissions.append({
+            'IpProtocol': 'tcp',
+            'FromPort': 22,
+            'ToPort': 22,
+            'IpRanges': [{'CidrIp': jenkins_cidr, 'Description': 'SSH access from public IP'}]
+        })
+    else:
+        print(f"SSH Port 22 is already authorized for {jenkins_cidr}.")
 
     if ip_permissions:
         try:
